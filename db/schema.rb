@@ -19,8 +19,6 @@ ActiveRecord::Schema.define(version: 2021_06_24_123722) do
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.bigint "spending_id"
-    t.index ["spending_id"], name: "index_categories_on_spending_id"
   end
 
   create_table "spendings", force: :cascade do |t|
@@ -29,6 +27,8 @@ ActiveRecord::Schema.define(version: 2021_06_24_123722) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "user_id"
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_spendings_on_category_id"
     t.index ["user_id"], name: "index_spendings_on_user_id"
   end
 
@@ -42,6 +42,6 @@ ActiveRecord::Schema.define(version: 2021_06_24_123722) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "categories", "spendings"
+  add_foreign_key "spendings", "categories"
   add_foreign_key "spendings", "users"
 end
