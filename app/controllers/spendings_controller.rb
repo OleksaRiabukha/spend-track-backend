@@ -4,6 +4,7 @@ class SpendingsController < ApplicationController
   def create
     spending = Spending.new(spending_params)
     spending.user = current_user
+    spending.category = Category.find_by(id: spending_params[:category_id])
 
     if spending.valid?
       spending.save
@@ -46,7 +47,7 @@ class SpendingsController < ApplicationController
   private
 
   def spending_params
-    params.require(:spending).permit(:description, :amount)
+    params.require(:spending).permit(:description, :amount, :category_id)
   end
 
   def find_spending
