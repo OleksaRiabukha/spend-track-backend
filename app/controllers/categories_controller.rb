@@ -11,7 +11,6 @@ class CategoriesController < ApplicationController
     end
   end
 
-
   private
 
   def category_params
