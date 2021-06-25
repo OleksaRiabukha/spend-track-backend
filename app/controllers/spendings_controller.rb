@@ -15,8 +15,10 @@ class SpendingsController < ApplicationController
   end
 
   def index
-    spendings = Spending.all
-    render json: { spendings: spendings }, status: :ok
+    spendings = Spending.where(user_id: current_user.id).order("#{sort_spendings}")
+    total_value = Spending.where(user_id: current_user.id).pluck(:amount).sum
+
+    render json: { spendings: spendings, total: total_value }, status: :ok
   end
 
   def show
@@ -53,4 +55,12 @@ class SpendingsController < ApplicationController
   def find_spending
     @spending = Spending.find(params[:id])
   end
+
+  def sort_spendings
+    sort = { sort_by: "created_at", sort_dir: "desc"}
+    sort[:sort_by] = params[:sort_by] if params[:sort_by].present?
+    sort[:sort_dir] = params[:sort_dir] if params[:sort_dir].present?
+    sort.values.join(" ")
+  end
+
 end
