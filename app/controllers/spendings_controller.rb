@@ -54,13 +54,14 @@ class SpendingsController < ApplicationController
 
   def find_spending
     @spending = Spending.find(params[:id])
+    # @spending.user = current_user
+    # @spending.category = Category.find_by(id: spending_params[:category_id])
   end
 
   def sort_spendings
     sort = { sort_by: "created_at", sort_dir: "desc"}
-    sort[:sort_by] = params[:sort_by] if params[:sort_by].present?
-    sort[:sort_dir] = params[:sort_dir] if params[:sort_dir].present?
+    sort[:sort_by] = params[:sort_by].split(" ").first if params[:sort_by].present?
+    sort[:sort_dir] = params[:sort_by].split(" ").last if params[:sort_by].present?
     sort.values.join(" ")
   end
-
 end
