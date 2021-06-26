@@ -17,6 +17,9 @@ class SpendingsController < ApplicationController
   def index
     spendings = Spending.where(user_id: current_user.id).order("#{sort_spendings}")
     total_value = Spending.where(user_id: current_user.id).pluck(:amount).sum
+    # options = {
+    #   include: [:category]
+    # }
 
     render json: {spendings: SpendingSerializer.new(spendings), total_amount: total_value}, status: :ok
   end

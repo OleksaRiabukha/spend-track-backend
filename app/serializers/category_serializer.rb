@@ -1,5 +1,4 @@
 
 class CategorySerializer < BaseSerializer
-  attributes :name
-  has_many :spendings
+  attributes :name, :spendings
 end
