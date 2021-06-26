@@ -7,9 +7,9 @@ class UsersController < ApplicationController
     if user.valid?
       user.save
       token = issue_token(user)
-      render json: { user: user, jwt: token }, status: :ok
+      render json: { user: UserSerializer.new(user), jwt: token }, status: :ok
     else
-      render json: { errors: user.errors }, status: :bad_request
+      render json: ActiveRecordErrorsSerializer.new(user), status: :bad_request
     end
   end
 

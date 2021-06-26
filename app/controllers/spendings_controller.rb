@@ -8,9 +8,9 @@ class SpendingsController < ApplicationController
 
     if spending.valid?
       spending.save
-      render json: { spending: spending }, status: :ok
+      render json: SpendingSerializer.new(spending), status: :ok
     else
-      render json: { errors: spending.errors }, status: :bad_request
+      render json: ActiveRecordErrorsSerializer.new(spending), status: :bad_request
     end
   end
 
@@ -18,23 +18,24 @@ class SpendingsController < ApplicationController
     spendings = Spending.where(user_id: current_user.id).order("#{sort_spendings}")
     total_value = Spending.where(user_id: current_user.id).pluck(:amount).sum
 
-    render json: { spendings: spendings, total: total_value }, status: :ok
+    render json: {spendings: SpendingSerializer.new(spendings), total_amount: total_value}, status: :ok
   end
 
   def show
     if @spending.valid?
-      render json: { spending: @spending }, status: :ok
+      render json: SpendingSerializer.new(@spending), status: :ok
     else
-      render json: { errors: @spending.errors }, status: :bad_request
+      render json: ActiveRecordErrorsSerializer.new(@spending), status: :not_found
+
     end
   end
 
   def update
     if @spending.valid?
       @spending.update(spending_params)
-      render json: { spending: @spending }, status: :ok
+      render json: SpendingSerializer.new(@spending), status: :ok
     else
-      render json: { errors: @spending.errors }, status: :bad_request
+      render json: ActiveRecordErrorsSerializer.new(@spending), status: :not_found
     end
   end
 
@@ -42,7 +43,7 @@ class SpendingsController < ApplicationController
     if @spending.destroy
       head :no_content
     else
-      render json: { errors: @spending.errors }, status: :bad_request
+      render json: ActiveRecordErrorsSerializer.new(@spending), status: :not_found
     end
   end
 
