@@ -92,6 +92,4 @@ test:
 #
 production:
   <<: *default
-  database: spend_and_track_production
-  username: spend_and_track
   password: <%= ENV['SPEND_AND_TRACK_DATABASE_PASSWORD'] %>
