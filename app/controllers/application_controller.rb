@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   before_action :authorized
 
   def jwt_key
-    Rails.application.credentials.jwt_key
+    ENV['SESSION_SECRET']
   end
 
   def issue_token(user)
