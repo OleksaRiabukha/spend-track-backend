@@ -1,10 +1,9 @@
 class SpendingsController < ApplicationController
-  before_action :find_spending, only: %i[show update destroy]
+  before_action :find_spending, only: %i[show new update destroy]
 
   def create
     spending = Spending.new(spending_params)
     spending.user = current_user
-    spending.category = Category.find_by(id: spending_params[:category_id])
 
     if spending.valid?
       spending.save
@@ -17,9 +16,6 @@ class SpendingsController < ApplicationController
   def index
     spendings = Spending.where(user_id: current_user.id).order("#{sort_spendings}")
     total_value = Spending.where(user_id: current_user.id).pluck(:amount).sum
-    # options = {
-    #   include: [:category]
-    # }
 
     render json: {spendings: SpendingSerializer.new(spendings), total_amount: total_value}, status: :ok
   end
@@ -34,11 +30,10 @@ class SpendingsController < ApplicationController
   end
 
   def update
-    if @spending.valid?
-      @spending.update(spending_params)
+    if @spending.update(spending_params)
       render json: SpendingSerializer.new(@spending), status: :ok
     else
-      render json: ActiveRecordErrorsSerializer.new(@spending), status: :not_found
+      render json: ActiveRecordErrorsSerializer.new(@spending), status: :bad_request
     end
   end
 
@@ -57,9 +52,11 @@ class SpendingsController < ApplicationController
   end
 
   def find_spending
-    @spending = Spending.find(params[:id])
-    # @spending.user = current_user
-    # @spending.category = Category.find_by(id: spending_params[:category_id])
+    begin
+      @spending = Spending.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: {errors: "Spending with id #{params[:id]} not found"}, status: :not_found
+    end
   end
 
   def sort_spendings
