@@ -14,7 +14,7 @@ Ruby on Rails API repository for the finance tracking app.
 
 `{ "user": { "first_name": "random", "last_name": "user", "email": "random@mail.com", "password": "password"}}`
 
-- after that you'll receive a JWT token, which should be added to headers for the each request. Example of header: 
+- after that, you'll receive a JWT token, which should be added to headers for each request. Example of the header: 
 
 `Authorization: your_token`
  
