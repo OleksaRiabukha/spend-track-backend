@@ -1,9 +1,8 @@
 class ApplicationController < ActionController::API
-  # skip_before_action :verify_authenticity_token
   before_action :authorized
 
   def jwt_key
-    "anything"
+    Rails.application.credentials.jwt_key
   end
 
   def issue_token(user)

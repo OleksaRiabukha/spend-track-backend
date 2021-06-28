@@ -19,11 +19,7 @@ class CategoriesController < ApplicationController
   end
 
   def show
-    if @category.valid?
-      render json: CategorySerializer.new(@category), status: :ok
-    else
-      render json: ActiveRecordErrorsSerializer.new(@category), status: :bad_request
-    end
+    render json: CategorySerializer.new(@category), status: :ok
   end
 
   private
@@ -33,6 +29,10 @@ class CategoriesController < ApplicationController
   end
 
   def find_category
-    @category = Category.find(params[:id])
+    begin
+      @category = Category.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      render json: {errors: "Category with id #{params[:id]} not found"}, status: :not_found
+    end
   end
 end
