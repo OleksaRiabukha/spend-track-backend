@@ -19,10 +19,16 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
   # https://guides.rubyonrails.org/configuring.html#database-pooling
+  <% if Rails.application.credentials.postgres.present? %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   username: <%= Rails.application.credentials.postgres[:DATABASE_USERNAME] %>
   password: <%= Rails.application.credentials.postgres[:DATABASE_PASSWORD] %>
   host: <%= Rails.application.credentials.postgres[:DATABASE_HOST] %>
+  <% else %>
+  host: db
+  username: postgres
+  password: password
+  <% end %>
 
 
 
@@ -86,6 +92,4 @@ test:
 #
 production:
   <<: *default
-  database: spend_and_track_production
-  username: spend_and_track
   password: <%= ENV['SPEND_AND_TRACK_DATABASE_PASSWORD'] %>
